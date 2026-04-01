@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园风光 | Code & Campus</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <style>
+        /* 校园风光页面专用样式 */
+        .campus-header {
+            background: linear-gradient(rgba(44, 62, 80, 0.85), rgba(52, 152, 219, 0.85)),
+            url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 4rem 1rem;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .campus-header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .campus-header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+        }
+
+        .campus-intro {
+            max-width: 900px;
+            margin: 0 auto 3rem;
+            padding: 0 1.5rem;
+            text-align: center;
+        }
+
+        .campus-intro h2 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .campus-intro h2:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #3498db;
+        }
+
+        .campus-intro p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 1.5rem;
+        }
+
+        /* 图集样式 */
+        .gallery-controls {
+            max-width: 1200px;
+            margin: 0 auto 2rem;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .gallery-tabs {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .gallery-tab {
+            padding: 0.5rem 1.2rem;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .gallery-tab:hover,
+        .gallery-tab.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .search-box {
+            padding: 0.6rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            width: 250px;
+            font-size: 0.95rem;
+        }
+
+        .gallery-grid {
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-item {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover .gallery-img {
+            transform: scale(1.05);
+        }
+
+        .gallery-info {
+            padding: 1.2rem;
+        }
+
+        .gallery-title {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .gallery-desc {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 0.8rem;
+        }
+
+        .gallery-tag {
+            display: inline-block;
+            background: #e8f4fc;
+            color: #3498db;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-right: 0.3rem;
+            margin-bottom: 0.3rem;
+        }
+
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .modal-info {
+            padding: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .modal-desc {
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1.5rem;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .close-modal:hover {
+            background: rgba(0,0,0,0.9);
+        }
+
+        /* 校园地图区域 */
+        .campus-map {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .map-container {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .map-title {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .map-item {
+            text-align: center;
+        }
+
+        .map-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .map-item h4 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .map-item p {
+            color: #666;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .campus-header h1 {
+                font-size: 2.2rem;
+            }
+
+            .gallery-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            .modal-img {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .campus-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                max-height: 80vh;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav>
+        <div class="logo">
+            <h1>Code & Campus</h1>
+            <p>淮北师范大学校园风光</p>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="../index.html">首页</a></li>
+            <li><a href="department.html">院系介绍</a></li>
+            <li><a href="campus.html" class="active">校园风光</a></li>
+            <li><a href="projects.html">学生作品</a></li>
+            <li><a href="resources.html">学习资源</a></li>
+            <li><a href="club.html">社团活动</a></li>
+            <li><a href="events.html">学术活动</a></li>
+            <li><a href="about.html">关于我们</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <section class="campus-header">
+        <h1>淮北师范大学校园风光</h1>
+        <p>走进美丽的淮师大校园，感受四季变幻的风景与浓厚的学术氛围</p>
+        <div style="margin-top: 2rem;">
+            <span class="gallery-tag">20张精选照片</span>
+            <span class="gallery-tag">四季美景</span>
+            <span class="gallery-tag">校园地标</span>
+            <span class="gallery-tag">学生生活</span>
+        </div>
+    </section>
+
+    <section class="campus-intro">
+        <h2>校园概览</h2>
+        <p>淮北师范大学坐落于国家园林城市、国家能源基地安徽省淮北市。学校现有相山、滨湖两个校区，占地面积2400余亩。校园内环境优美，绿树成荫，四季景色各异，既有现代化教学设施，又保留了浓厚的人文底蕴。</p>
+        <p>这里不仅是求知的殿堂，更是师生们生活、学习、成长的美丽家园。让我们通过镜头一起领略淮师大的独特魅力。</p>
+    </section>
+
+    <div class="gallery-controls">个人随拍
+        <div class="gallery-tabs">
+            <div class="gallery-tab active" data-filter="all">全部</div>
+            <div class="gallery-tab" data-filter="architecture">建筑景观</div>
+            <div class="gallery-tab" data-filter="nature">自然风光</div>
+            <div class="gallery-tab" data-filter="campus-life">校园生活</div>
+            <div class="gallery-tab" data-filter="academic">学术氛围</div>
+            <div class="gallery-tab" data-filter="academic">个人随拍</div>
+        </div>
+        <input type="text" class="search-box" placeholder="搜索图片描述..." id="searchInput">
+    </div>
+
+    <div class="gallery-grid" id="galleryContainer">
+        <!-- 图片1 -->
+        <div class="gallery-item" data-tags="architecture" data-title="映入眼帘" data-desc="每天清晨，学子们从这里开始新一天的学习生活。" data-img="../images/campus/tu01.jpg">
+            <img src="../images/tu01.jpg" alt="映入眼帘" class="gallery-img">
+            <div class="gallery-info">
+                <h3 class="gallery-title">映入眼帘</h3>
+                <p class="gallery-desc">由淮北师范大学滨湖校区南大门进入，第一眼便可眺望到图书馆上空神圣的金色...(取自校园官网)</p>
+                <div>
+                    <span class="gallery-tag">建筑景观</span>
+                    <span class="gallery-tag">地标建筑</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图片2 -->
+        <div class="gallery-item" data-tags="architecture academic" data-title="庄严的格局" data-desc="高空拍摄的明德广场全景，十分震撼" data-img="../images/campus/tu02.jpg">
+            <img src="../images/tu02.jpg" alt="庄严的格局" class="gallery-img">
+            <div class="gallery-info">
+                <h3 class="gallery-title">庄严的格局</h3>
+                <p class="gallery-desc">高空拍摄的明德广场全景，取自校园官网...</p>
+                <div>
+                    <span class="gallery-tag">建筑景观</span>
+                    <span class="gallery-tag">学术氛围</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图片3 -->
+        <div class="gallery-item" data-tags="nature" data-title="铭记校训" data-desc="淮北师范大学老校区正门，庄重大气，是学校的标志性建筑。石碑上刻着校训，彰显学校的历史底蕴和文化内涵。" data-img="../images/campus/tu03.jpg">
+            <img src="../images/tu03.jpg" alt="铭记校训" class="gallery-img">
+            <div class="gallery-info">
+                <h3 class="gallery-title">铭记校训</h3>
+                <p class="gallery-desc">博学 慎思 励志 笃行，深深的铭记在每一个学子心中...(取自校园官网)</p>
+                <div>
+                    <span class="gallery-tag">建筑景观</span>
+                    <span class="gallery-tag">学术氛围</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图片4 -->
+        <div class="gallery-item" data-tags="campus-life" data-title="个人随拍" data-desc="学校真的很美，照片无法记录，欢迎大家来亲自感受。" data-img="../images/campus/tu04.jpg">
+            <img src="../images/tu04.jpg" alt="个人随拍" class="gallery-img">
+            <div class="gallery-info">
+                <h3 class="gallery-title">个人随拍</h3>
+                <p class="gallery-desc">学校真的很美，照片无法记录，欢迎大家来亲自感受...</p>
+                <div>
+                    <span class="gallery-tag">校园生活</span>
+                    <span class="gallery-tag">个人随拍</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图片5 -->
+        <div class="gallery-item" data-tags="academic" data-title="个人随拍" data-desc="学校真的很美，照片无法记录，欢迎大家来亲自感受。" data-img="../images/campus/tu05.jpg">
+            <img src="../images/tu05.jpg" alt="个人随拍" class="gallery-img">
+            <div class="gallery-info">
+                <h3 class="gallery-title">个人随拍</h3>
+                <p class="gallery-desc">学校真的很美，照片无法记录，欢迎大家来亲自感受...</p>
+                <div>
+                    <span class="gallery-tag">个人随拍</span>
+                    <span class="gallery-tag">个人随拍</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图片6 -->
+        <div class="gallery-item" data-tags="architecture" data-title="个人随拍" data-desc="学校真的很美，照片无法记录，欢迎大家来亲自感受。" data-img="../images/campus/tu06.jpg">
+            <img src="../images/tu06.jpg" alt="个人随拍" class="gallery-img">
+            <div class="gallery-info">
+                <h3 class="gallery-title">个人随拍</h3>
+                <p class="gallery-desc">学校真的很美，照片无法记录，欢迎大家来亲自感受...</p>
+                <div>
+                    <span class="gallery-tag">个人随拍</span>
+                    <span class="gallery-tag">个人随拍</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图片7 -->
+        <div class="gallery-item" data-tags="nature" data-title="个人随拍" data-desc="学校真的很美，照片无法记录，欢迎大家来亲自感受。" data-img="../images/campus/tu07.jpg">
+            <img src="../images/tu07.jpg" alt="个人随拍" class="gallery-img">
+            <div class="gallery-info">
+                <h3 class="gallery-title">个人随拍</h3>
+                <p class="gallery-desc">学校真的很美，照片无法记录，欢迎大家来亲自感受...</p>
+                <div>
+                    <span class="gallery-tag">自然风光</span>
+                    <span class="gallery-tag">个人随拍</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图片8 -->
+        <div class="gallery-item" data-tags="campus-life" data-title="个人随拍" data-desc="学校真的很美，照片无法记录，欢迎大家来亲自感受。" data-img="../images/campus/tu08.jpg">
+            <img src="../images/tu08.jpg" alt="个人随拍" class="gallery-img">
+            <div class="gallery-info">
+                <h3 class="gallery-title">个人随拍</h3>
+                <p class="gallery-desc">学校真的很美，照片无法记录，欢迎大家来亲自感受...</p>
+                <div>
+                    <span class="gallery-tag">校园生活</span>
+                    <span class="gallery-tag">个人随拍</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图片9 -->
+        <div class="gallery-item" data-tags="academic" data-title="个人随拍" data-desc="学校真的很美，照片无法记录，欢迎大家来亲自感受。" data-img="../images/campus/tu09.jpg">
+            <img src="../images/tu09.jpg" alt="个人随拍" class="gallery-img">
+            <div class="gallery-info">
+                <h3 class="gallery-title">个人随拍</h3>
+                <p class="gallery-desc">学校真的很美，照片无法记录，欢迎大家来亲自感受...</p>
+                <div>
+                    <span class="gallery-tag">个人随拍</span>
+                    <span class="gallery-tag">个人随拍</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图片10 -->
+        <div class="gallery-item" data-tags="architecture" data-title="个人随拍" data-desc="学校真的很美，照片无法记录，欢迎大家来亲自感受。" data-img="../images/campus/tu10.jpg">
+            <img src="../images/tu10.jpg" alt="个人随拍" class="gallery-img">
+            <div class="gallery-info">
+                <h3 class="gallery-title">个人随拍</h3>
+                <p class="gallery-desc">学校真的很美，照片无法记录，欢迎大家来亲自感受...</p>
+                <div>
+                    <span class="gallery-tag">个人随拍</span>
+                    <span class="gallery-tag">个人随拍</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图片11 -->
+        <div class="gallery-item" data-tags="nature" data-title="个人随拍" data-desc="学校真的很美，照片无法记录，欢迎大家来亲自感受。" data-img="../images/campus/tu11.jpg">
+            <img src="../images/tu11.jpg" alt="个人随拍" class="gallery-img">
+            <div class="gallery-info">
+                <h3 class="gallery-title">个人随拍</h3>
+                <p class="gallery-desc">学校真的很美，照片无法记录，欢迎大家来亲自感受...</p>
+                <div>
+                    <span class="gallery-tag">自然风光</span>
+                    <span class="gallery-tag">生态环境</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图片12 -->
+        <div class="gallery-item" data-tags="campus-life" data-title="个人随拍" data-desc="学校真的很美，照片无法记录，欢迎大家来亲自感受。" data-img="../images/campus/tu12.jpg">
+            <img src="../images/tu12.jpg" alt="个人随拍" class="gallery-img">
+            <div class="gallery-info">
+                <h3 class="gallery-title">学生活动中心</h3>
+                <p class="gallery-desc">学校真的很美，照片无法记录，欢迎大家来亲自感受...</p>
+                <div>
+                    <span class="gallery-tag">校园生活</span>
+                    <span class="gallery-tag">个人随拍</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图片13 -->
+        <div class="gallery-item" data-tags="academic" data-title="个人随拍" data-desc="学校真的很美，照片无法记录，欢迎大家来亲自感受。" data-img="../images/campus/tu13.jpg">
+            <img src="../images/tu13.jpg" alt="个人随拍" class="gallery-img">
+            <div class="gallery-info">
+                <h3 class="gallery-title">个人随拍</h3>
+                <p class="gallery-desc">学校真的很美，照片无法记录，欢迎大家来亲自感受...</p>
+                <div>
+                    <span class="gallery-tag">个人随拍</span>
+                    <span class="gallery-tag">个人随拍</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图片14 -->
+        <div class="gallery-item" data-tags="architecture" data-title="个人随拍" data-desc="学校真的很美，照片无法记录，欢迎大家来亲自感受。" data-img="../images/campus/tu14.jpg">
+            <img src="../images/tu14.jpg" alt="个人随拍" class="gallery-img">
+            <div class="gallery-info">
+                <h3 class="gallery-title">个人随拍</h3>
+                <p class="gallery-desc">学校真的很美，照片无法记录，欢迎大家来亲自感受...</p>
+                <div>
+                    <span class="gallery-tag">个人随拍</span>
+                    <span class="gallery-tag">个人随拍</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图片15 -->
+        <div class="gallery-item" data-tags="nature" data-title="个人随拍" data-desc="学校真的很美，照片无法记录，欢迎大家来亲自感受。" data-img="../images/campus/tu15.jpg">
+            <img src="../images/tu15.jpg" alt="个人随拍" class="gallery-img">
+            <div class="gallery-info">
+                <h3 class="gallery-title">个人随拍</h3>
+                <p class="gallery-desc">学校真的很美，照片无法记录，欢迎大家来亲自感受...</p>
+                <div>
+                    <span class="gallery-tag">自然风光</span>
+                    <span class="gallery-tag">个人随拍</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图片16 -->
+        <div class="gallery-item" data-tags="campus-life" data-title="个人随拍" data-desc="学校真的很美，照片无法记录，欢迎大家来亲自感受。" data-img="../images/campus/tu16.jpg">
+            <img src="../images/tu16.jpg" alt="个人随拍" class="gallery-img">
+            <div class="gallery-info">
+                <h3 class="gallery-title">个人随拍</h3>
+                <p class="gallery-desc">学校真的很美，照片无法记录，欢迎大家来亲自感受...</p>
+                <div>
+                    <span class="gallery-tag">校园生活</span>
+                    <span class="gallery-tag">个人随拍</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图片17 -->
+        <div class="gallery-item" data-tags="academic" data-title="个人随拍" data-desc="学校真的很美，照片无法记录，欢迎大家来亲自感受。" data-img="../images/campus/tu17.jpg">
+            <img src="../images/tu17.jpg" alt="个人随拍" class="gallery-img">
+            <div class="gallery-info">
+                <h3 class="gallery-title">个人随拍</h3>
+                <p class="gallery-desc">学校真的很美，照片无法记录，欢迎大家来亲自感受...</p>
+                <div>
+                    <span class="gallery-tag">个人随拍</span>
+                    <span class="gallery-tag">个人随拍</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图片18 -->
+        <div class="gallery-item" data-tags="architecture" data-title="个人随拍" data-desc="学校真的很美，照片无法记录，欢迎大家来亲自感受。" data-img="../images/campus/tu18.jpg">
+            <img src="../images/tu18.jpg" alt="个人随拍" class="gallery-img">
+            <div class="gallery-info">
+                <h3 class="gallery-title">个人随拍</h3>
+                <p class="gallery-desc">学校真的很美，照片无法记录，欢迎大家来亲自感受...</p>
+                <div>
+                    <span class="gallery-tag">个人随拍</span>
+                    <span class="gallery-tag">个人随拍</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图片19 -->
+        <div class="gallery-item" data-tags="nature" data-title="个人随拍" data-desc="学校真的很美，照片无法记录，欢迎大家来亲自感受。" data-img="../images/campus/tu19.jpg">
+            <img src="../images/tu19.jpg" alt="个人随拍" class="gallery-img">
+            <div class="gallery-info">
+                <h3 class="gallery-title">个人随拍</h3>
+                <p class="gallery-desc">学校真的很美，照片无法记录，欢迎大家来亲自感受...</p>
+                <div>
+                    <span class="gallery-tag">自然风光</span>
+                    <span class="gallery-tag">个人随拍</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图片20 -->
+        <div class="gallery-item" data-tags="campus-life academic" data-title="个人随拍" data-desc="学校真的很美，照片无法记录，欢迎大家来亲自感受。" data-img="../images/campus/tu20.jpg">
+            <img src="../images/tu20.jpg" alt="个人随拍" class="gallery-img">
+            <div class="gallery-info">
+                <h3 class="gallery-title">个人随拍</h3>
+                <p class="gallery-desc">学校真的很美，照片无法记录，欢迎大家来亲自感受...</p>
+                <div>
+                    <span class="gallery-tag">校园生活</span>
+                    <span class="gallery-tag">个人随拍</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 校园地图区域 -->
+    <section class="campus-map">
+        <div class="map-container">
+            <h2 class="map-title">校园功能区分布</h2>
+            <div class="map-grid">
+                <div class="map-item">
+                    <div class="map-icon">🏛️</div>
+                    <h4>教学区</h4>
+                    <p>文津楼、文源楼、特教楼、工科楼等</p>
+                </div>
+                <div class="map-item">
+                    <div class="map-icon">📚</div>
+                    <h4>学习区</h4>
+                    <p>图书馆、自习室、教学楼、学术报告厅</p>
+                </div>
+                <div class="map-item">
+                    <div class="map-icon">🏠</div>
+                    <h4>生活区</h4>
+                    <p>学生宿舍、食堂、超市、医务中心、银行</p>
+                </div>
+                <div class="map-item">
+                    <div class="map-icon">⚽</div>
+                    <h4>运动区</h4>
+                    <p>田径场、篮球场、网球场、足球场</p>
+                </div>
+                <div class="map-item">
+                    <div class="map-icon">🎭</div>
+                    <h4>活动区</h4>
+                    <p>学生活动中心、社团活动室、艺术楼、音乐厅</p>
+                </div>
+                <div class="map-item">
+                    <div class="map-icon">🌳</div>
+                    <h4>休闲区</h4>
+                    <p>景观湖、林荫小道、花园、读书角、咖啡厅</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- 图片模态框 -->
+<div class="modal" id="imageModal">
+    <div class="modal-content">
+        <div class="close-modal" id="closeModal">&times;</div>
+        <img src="" alt="" class="modal-img" id="modalImg">
+        <div class="modal-info">
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <p class="modal-desc" id="modalDesc"></p>
+            <div id="modalTags"></div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>© 2026 淮北师范大学计算机科学与技术学院 网页设计大赛参赛作品</p>
+    <p>地址：安徽省淮北市烈山区沱河东路8号（滨湖校区）</p>
+    <p>网站：<a href="https://cs.chnu.edu.cn/" target="_blank">https://cs.chnu.edu.cn/</a> | 学校官网：<a href="https://www.chnu.edu.cn/" target="_blank">https://www.chnu.edu.cn/</a></p>
+    <p class="note">本网站为原创作品，符合网页设计大赛要求 | 图片素材来源于本人，仅用于展示我校风光</p>
+</footer>
+
+<script src="../js/main.js"></script>
+<script>
+    // 图集交互功能
+    document.addEventListener('DOMContentLoaded', function() {
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const galleryTabs = document.querySelectorAll('.gallery-tab');
+        const searchInput = document.getElementById('searchInput');
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImg');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDesc = document.getElementById('modalDesc');
+        const modalTags = document.getElementById('modalTags');
+        const closeModal = document.getElementById('closeModal');
+
+        // 分类筛选功能
+        galleryTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // 更新激活状态
+                galleryTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+
+                const filter = this.getAttribute('data-filter');
+                filterGallery(filter);
+            });
+        });
+
+        // 搜索功能
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const activeFilter = document.querySelector('.gallery-tab.active').getAttribute('data-filter');
+
+            filterGallery(activeFilter, searchTerm);
+        });
+
+        // 筛选函数
+        function filterGallery(filter, searchTerm = '') {
+            galleryItems.forEach(item => {
+                const tags = item.getAttribute('data-tags');
+                const title = item.querySelector('.gallery-title').textContent.toLowerCase();
+                const desc = item.querySelector('.gallery-desc').textContent.toLowerCase();
+
+                const matchesFilter = filter === 'all' || tags.includes(filter);
+                const matchesSearch = searchTerm === '' ||
+                    title.includes(searchTerm) ||
+                    desc.includes(searchTerm) ||
+                    tags.includes(searchTerm);
+
+                if (matchesFilter && matchesSearch) {
+                    item.style.display = 'block';
+                    // 添加淡入动画
+                    item.style.animation = 'fadeIn 0.5s ease';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // 图片点击查看大图
+        galleryItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const imgSrc = this.getAttribute('data-img');
+                const title = this.getAttribute('data-title');
+                const desc = this.getAttribute('data-desc');
+                const tags = this.querySelectorAll('.gallery-tag');
+
+                // 设置模态框内容
+                modalImg.src = imgSrc;
+                modalImg.alt = title;
+                modalTitle.textContent = title;
+                modalDesc.textContent = desc;
+
+                // 清空并重新添加标签
+                modalTags.innerHTML = '';
+                tags.forEach(tag => {
+                    const tagClone = tag.cloneNode(true);
+                    tagClone.style.marginRight = '0.5rem';
+                    tagClone.style.marginBottom = '0.5rem';
+                    modalTags.appendChild(tagClone);
+                });
+
+                // 显示模态框
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden'; // 防止背景滚动
+            });
+        });
+
+        // 关闭模态框
+        closeModal.addEventListener('click', function() {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.style.display === 'flex') {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // 添加淡入动画关键帧
+        const style = document.createElement('style');
+        style.textContent = `
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+            `;
+        document.head.appendChild(style);
+
+        // 初始加载时随机给图片添加动画
+        galleryItems.forEach((item, index) => {
+            item.style.animationDelay = `${index * 0.05}s`;
+        });
+    });
+</script>
+</body>
+</html>

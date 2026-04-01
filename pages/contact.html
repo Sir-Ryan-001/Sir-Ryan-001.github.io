@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>联系我们 | Code & Campus</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <style>
+        /* 联系我们页面专用样式 */
+        .contact-header {
+            background: linear-gradient(135deg, #e74c3c 0%, #3498db 100%);
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .contact-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .contact-header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+            padding: 0 1.5rem;
+        }
+        
+        /* 联系信息网格 */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .contact-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        
+        .contact-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #3498db;
+        }
+        
+        .contact-card h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-info {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .contact-link {
+            color: #3498db;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+        
+        .contact-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* 联系表单 */
+        .contact-form-container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin: 3rem 0;
+        }
+        
+        .form-title {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 2rem auto 0;
+        }
+        
+        .submit-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        /* 地图区域 */
+        .map-container {
+            margin: 3rem 0;
+        }
+        
+        .map-title {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .map-placeholder {
+            background: #f8f9fa;
+            border-radius: 10px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #666;
+            border: 2px dashed #ddd;
+        }
+        
+        .map-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        /* 办公时间 */
+        .hours-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        .hours-table th,
+        .hours-table td {
+            padding: 0.8rem;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+        
+        .hours-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .hours-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        @media (max-width: 768px) {
+            .contact-header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .contact-form-container {
+                padding: 1.5rem;
+            }
+            
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>Code & Campus</h1>
+                <p>联系我们</p>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="../index.html">首页</a></li>
+                <li><a href="department.html">院系介绍</a></li>
+                <li><a href="campus.html">校园风光</a></li>
+                <li><a href="projects.html">学生作品</a></li>
+                <li><a href="resources.html">学习资源</a></li>
+                <li><a href="club.html">社团活动</a></li>
+                <li><a href="events.html">学术活动</a></li>
+                <li><a href="about.html">关于我们</a></li>
+                <li><a href="contact.html" class="active">联系我们</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="contact-header">
+            <h1>联系我们</h1>
+            <p>如有任何问题或建议，欢迎通过以下方式与我们取得联系</p>
+        </section>
+        
+        <div class="contact-container">
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="contact-icon">📍</div>
+                    <h3>学院地址</h3>
+                    <div class="contact-info">
+                        <p><strong>滨湖校区：</strong>安徽省淮北市烈山区沱河东路8号</p>
+                        <p><strong>相山校区：</strong>安徽省淮北市相山区东山路100号</p>
+                        <p>计算机科学与技术学院位于滨湖校区理科楼</p>
+                    </div>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="contact-icon">📞</div>
+                    <h3>联系电话</h3>
+                    <div class="contact-info">
+                        <p><strong>学院办公室：</strong>xxxx-xxxxxxxx</p>
+                        <p><strong>教学秘书：</strong>xxxx-xxxxxxxx</p>
+                        <p><strong>学生工作办公室：</strong>xxxx-xxxxxxxx</p>
+                        <p>工作时间：周一至周五 8:00-12:00, 14:00-17:30</p>
+                    </div>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="contact-icon">📧</div>
+                    <h3>电子邮箱</h3>
+                    <div class="contact-info">
+                        <p><strong>学院邮箱：</strong>xxxx</p>
+                        <p><strong>招生咨询：</strong>xxxx</p>
+                        <p><strong>学术合作：</strong>xxxx</p>
+                        <p><strong>技术支持：</strong>xxxx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-form-container">
+                <h2 class="form-title">发送消息</h2>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name" class="form-label">姓名 *</label>
+                        <input type="text" id="name" class="form-control" required placeholder="请输入您的姓名">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email" class="form-label">电子邮箱 *</label>
+                        <input type="email" id="email" class="form-control" required placeholder="请输入您的电子邮箱">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone" class="form-label">联系电话</label>
+                        <input type="tel" id="phone" class="form-control" placeholder="请输入您的联系电话">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject" class="form-label">主题 *</label>
+                        <select id="subject" class="form-control" required>
+                            <option value="">请选择咨询主题</option>
+                            <option value="admission">招生咨询</option>
+                            <option value="academic">学术合作</option>
+                            <option value="event">活动咨询</option>
+                            <option value="suggestion">意见建议</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message" class="form-label">消息内容 *</label>
+                        <textarea id="message" class="form-control" required placeholder="请详细描述您的问题或建议..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">发送消息</button>
+                </form>
+            </div>
+            
+            <div class="map-container">
+                <h2 class="map-title">校园位置</h2>
+                <div class="map-placeholder">
+                    <div class="map-icon">🗺️</div>
+                    <h3>淮北师范大学滨湖校区地图</h3>
+                    <p>安徽省淮北市烈山区沱河东路8号</p>
+                    <p style="margin-top: 1rem; font-size: 0.9rem; color: #999;"><img src="../images/ditu.jpg" alt="滨湖校区" style="width: 100%; height: 200px; object-fit: cover;"></p>
+                </div>
+            </div>
+            
+            <div class="contact-card">
+                <h3>办公时间</h3>
+                <table class="hours-table">
+                    <thead>
+                        <tr>
+                            <th>工作日</th>
+                            <th>上午</th>
+                            <th>下午</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>星期一</td>
+                            <td>8:00 - 12:00</td>
+                            <td>14:00 - 17:30</td>
+                        </tr>
+                        <tr>
+                            <td>星期二</td>
+                            <td>8:00 - 12:00</td>
+                            <td>14:00 - 17:30</td>
+                        </tr>
+                        <tr>
+                            <td>星期三</td>
+                            <td>8:00 - 12:00</td>
+                            <td>14:00 - 17:30</td>
+                        </tr>
+                        <tr>
+                            <td>星期四</td>
+                            <td>8:00 - 12:00</td>
+                            <td>14:00 - 17:30</td>
+                        </tr>
+                        <tr>
+                            <td>星期五</td>
+                            <td>8:00 - 12:00</td>
+                            <td>14:00 - 17:30</td>
+                        </tr>
+                        <tr>
+                            <td>星期六</td>
+                            <td colspan="2" style="text-align: center;">休息</td>
+                        </tr>
+                        <tr>
+                            <td>星期日</td>
+                            <td colspan="2" style="text-align: center;">休息</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="margin-top: 1rem; color: #666; text-align: center;">
+                    注：国家法定节假日和寒暑假期间办公时间可能调整，请提前电话确认
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2026 淮北师范大学计算机科学与技术学院 网页设计大赛参赛作品</p>
+        <p>网站：<a href="https://cs.chnu.edu.cn/" target="_blank">https://cs.chnu.edu.cn/</a> | 学校官网：<a href="https://www.chnu.edu.cn/" target="_blank">https://www.chnu.edu.cn/</a></p>
+        <p class="note">本网站为原创作品，符合网页设计大赛要求</p>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // 联系表单处理
+        document.addEventListener('DOMContentLoaded', function() {
+            const contactForm = document.getElementById('contactForm');
+            const contactCards = document.querySelectorAll('.contact-card');
+            
+            // 联系卡片动画
+            contactCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+            
+            // 表单提交处理
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // 获取表单数据
+                    const formData = {
+                        name: document.getElementById('name').value,
+                        email: document.getElementById('email').value,
+                        phone: document.getElementById('phone').value,
+                        subject: document.getElementById('subject').value,
+                        message: document.getElementById('message').value
+                    };
+                    
+                    // 简单验证
+                    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+                        alert('请填写所有必填字段！');
+                        return;
+                    }
+                    
+                    // 这里在实际项目中应该发送到服务器
+                    // 现在只是模拟提交成功
+                    alert('消息发送成功！我们会尽快与您联系。');
+                    
+                    // 重置表单
+                    contactForm.reset();
+                    
+                    // 模拟发送动画
+                    const submitBtn = contactForm.querySelector('.submit-btn');
+                    const originalText = submitBtn.textContent;
+                    submitBtn.textContent = '发送中...';
+                    submitBtn.disabled = true;
+                    
+                    setTimeout(() => {
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    }, 1500);
+                });
+            }
+            
+            // 表单输入效果
+            const formControls = document.querySelectorAll('.form-control');
+            formControls.forEach(control => {
+                control.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'translateY(-2px)';
+                });
+                
+                control.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
